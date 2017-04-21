@@ -47,5 +47,26 @@ def add_entry_post():
 	return redirect(url_for("entries"))
 
 @app.route("/entry/<int:id>")
-def single_post():
-	
+def single_post(id=1):
+	#TODO: default to latest post instead of first one
+	entries = session.query(Entry).get(id)
+	#TODO: link next and previous posts a la wz2100.net
+	return render_template("entries.html",
+		entries=[entries]
+	)
+
+@app.route("/entry/<int:id>/edit", methods=["GET"])
+def edit_entry_get(id):
+	entry = session.query(Entry).get(id)
+	return render_template("edit_entry.html",
+		entry=entry
+	)
+
+@app.route("/entry/<int:id>/edit", methods=["POST"])
+def edit_entry_post(id):
+	entry = session.query(Entry).get(id)
+	entry.title=request.form["title"]
+	entry.content=request.form["content"]
+	session.commit()
+	#TODO: redirect to same post
+	return redirect(url_for("entries"))
