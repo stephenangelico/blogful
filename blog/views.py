@@ -6,7 +6,9 @@ from .database import session, Entry
 PAGINATE_BY = 10
 
 @app.route("/")
+@app.route("/?limit=<int:limit>")
 @app.route("/page/<int:page>")
+@app.route("/page/<int:page>/?limit=<int:limit>")
 def entries(page=1):
 	# Zero-indexed page
 	page_index = page - 1
@@ -23,6 +25,7 @@ def entries(page=1):
 	entries = session.query(Entry)
 	entries = entries.order_by(Entry.datetime.desc())
 	entries = entries[start:end]
+	#TODO: clip posts so that they don't fill the screen
 	
 	return render_template("entries.html",
 		entries=entries,
@@ -69,4 +72,18 @@ def edit_entry_post(id):
 	entry.content=request.form["content"]
 	session.commit()
 	#TODO: redirect to same post
+	return redirect(url_for("entries"))
+
+@app.route("/entry/<int:id>/delete", methods=["GET"])
+def remove_entry_get(id):
+	entry = session.query(Entry).get(id)
+	return render_template("delete.html",
+		entry=entry
+	)
+	
+@app.route("/entry/<int:id>/delete", methods=["POST"])
+def remove_entry_delete(id):
+	print("Starting deletion")
+	session.query(Entry).filter(Entry.id==id).delete()
+	session.commit()
 	return redirect(url_for("entries"))

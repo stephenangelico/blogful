@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>
+	Delete Entry "{{ entry.title }}"
+</h1>
+
+<form role="form" method="POST">
+	<p>Are you sure you want to delete the post "{{ entry.title }}"?
+	This cannot be undone.</p>
+	<button type="submit" class="btn btn-primary 2up">Delete</button>
+	<a href="{{ url_for('entries') }}"><button type="button" class="btn btn-default 2up">Cancel</button></a>
+</form>
+
+{% endblock %}
