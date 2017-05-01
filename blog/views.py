@@ -8,21 +8,27 @@ from .database import session, Entry, User
 PAGINATE_BY = 10
 
 @app.route("/")
-@app.route("/?limit=<int:limit>")
 @app.route("/page/<int:page>")
-@app.route("/page/<int:page>/?limit=<int:limit>")
 def entries(page=1):
 	# Zero-indexed page
 	page_index = page - 1
 	
+	try:
+		limit = int(request.args.get("limit", PAGINATE_BY))
+	except ValueError:
+		limit = PAGINATE_BY
+	if limit < 1 or limit > 100:
+		limit = PAGINATE_BY
+	
 	count = session.query(Entry).count()
 	
-	start = page_index * PAGINATE_BY
-	end = start + PAGINATE_BY
+	start = page_index * limit
+	end = start + limit
 	
-	total_pages = (count - 1) // PAGINATE_BY + 1
+	total_pages = (count - 1) // limit + 1
 	has_next = page_index < total_pages - 1
 	has_prev = page_index > 0
+	has_paginator = True
 	
 	entries = session.query(Entry)
 	entries = entries.order_by(Entry.datetime.desc())
@@ -32,9 +38,11 @@ def entries(page=1):
 	return render_template("entries.html",
 		entries=entries,
 		has_next=has_next,
+		has_paginator=has_paginator,
 		has_prev=has_prev,
 		page=page,
-		total_pages=total_pages
+		total_pages=total_pages,
+		limit=limit,
 	)
 
 @app.route("/entry/add", methods=["GET"])

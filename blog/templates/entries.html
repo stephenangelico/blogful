@@ -2,6 +2,18 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if has_paginator %}
+	<div class="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Entries per page:
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><a href="?limit=10">10</a></li>
+			<li><a href="?limit=20">20</a></li>
+			<li><a href="?limit=50">50</a></li>
+		<ul>
+	</div>
+	{% endif %}
+
 {% for entry in entries %}
 {{ macros.render_entry(entry) }}
 {% endfor %}
@@ -9,12 +21,12 @@
 <ul class="pager">
 	{% if has_next %}
 	<li class="previous">
-	<a href="{{ url_for('entries', page=page + 1) }}">&larr; Older</a>
+	<a href="{{ url_for('entries', page=page + 1, limit=limit) }}">&larr; Older</a>
 	</li>
 	{% endif %}
-	{% if has_prev %}
+		{% if has_prev %}
 	<li class="next">
-	<a href="{{ url_for('entries', page=page - 1) }}">&rarr; Newer</a>
+	<a href="{{ url_for('entries', page=page - 1, limit=limit) }}">&rarr; Newer</a>
 	</li>
 	{% endif %}
 </ul>
