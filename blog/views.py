@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, login_required, current_user
 from werkzeug.security import check_password_hash
 
 from . import app
@@ -46,14 +46,17 @@ def entries(page=1):
 	)
 
 @app.route("/entry/add", methods=["GET"])
+@login_required
 def add_entry_get():
 	return render_template("add_entry.html")
 
 @app.route("/entry/add", methods=["POST"])
+@login_required
 def add_entry_post():
 	entry = Entry(
 		title=request.form["title"],
 		content=request.form["content"],
+		author=current_user,
 	)
 	session.add(entry)
 	session.commit()
@@ -69,6 +72,7 @@ def single_post(id=1):
 	)
 
 @app.route("/entry/<int:id>/edit", methods=["GET"])
+@login_required
 def edit_entry_get(id):
 	entry = session.query(Entry).get(id)
 	return render_template("edit_entry.html",
@@ -76,6 +80,7 @@ def edit_entry_get(id):
 	)
 
 @app.route("/entry/<int:id>/edit", methods=["POST"])
+@login_required
 def edit_entry_post(id):
 	entry = session.query(Entry).get(id)
 	entry.title=request.form["title"]
@@ -85,6 +90,7 @@ def edit_entry_post(id):
 	return redirect(url_for("entries"))
 
 @app.route("/entry/<int:id>/delete", methods=["GET"])
+@login_required
 def remove_entry_get(id):
 	entry = session.query(Entry).get(id)
 	return render_template("delete.html",
@@ -92,6 +98,7 @@ def remove_entry_get(id):
 	)
 	
 @app.route("/entry/<int:id>/delete", methods=["POST"])
+@login_required
 def remove_entry_delete(id):
 	print("Starting deletion")
 	session.query(Entry).filter(Entry.id==id).delete()
