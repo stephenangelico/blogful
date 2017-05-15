@@ -43,6 +43,7 @@ def entries(page=1):
 		page=page,
 		total_pages=total_pages,
 		limit=limit,
+		current_user=current_user,
 	)
 
 @app.route("/entry/add", methods=["GET"])
@@ -75,6 +76,7 @@ def single_post(id=1):
 @login_required
 def edit_entry_get(id):
 	entry = session.query(Entry).get(id)
+	author = session.query(Entry).get(author)
 	return render_template("edit_entry.html",
 		entry=entry
 	)
