@@ -76,7 +76,9 @@ def single_post(id=1):
 @login_required
 def edit_entry_get(id):
 	entry = session.query(Entry).get(id)
-	author = session.query(Entry).get(author)
+	if entry.author_id != current_user.id:
+		flash("You can only edit your own posts", "danger")
+		return redirect(request.referrer or url_for("entries"))
 	return render_template("edit_entry.html",
 		entry=entry
 	)
@@ -85,6 +87,9 @@ def edit_entry_get(id):
 @login_required
 def edit_entry_post(id):
 	entry = session.query(Entry).get(id)
+	if entry.author_id != current_user.id:
+		flash("You can only edit your own posts", "danger")
+		return redirect(url_for("entries"))
 	entry.title=request.form["title"]
 	entry.content=request.form["content"]
 	session.commit()
@@ -94,7 +99,11 @@ def edit_entry_post(id):
 @app.route("/entry/<int:id>/delete", methods=["GET"])
 @login_required
 def remove_entry_get(id):
+	#TODO: lock down by user or admin
 	entry = session.query(Entry).get(id)
+	if entry.author_id != current_user.id:
+		flash("You can only delete your own posts", "danger")
+		return redirect(request.referrer or url_for("entries"))
 	return render_template("delete.html",
 		entry=entry
 	)
@@ -102,6 +111,10 @@ def remove_entry_get(id):
 @app.route("/entry/<int:id>/delete", methods=["POST"])
 @login_required
 def remove_entry_delete(id):
+	entry = session.query(Entry).get(id)
+	if entry.author_id != current_user.id:
+		flash("You can only delete your own posts", "danger")
+		return redirect(url_for("entries"))
 	print("Starting deletion")
 	session.query(Entry).filter(Entry.id==id).delete()
 	session.commit()
