@@ -99,7 +99,6 @@ def edit_entry_post(id):
 @app.route("/entry/<int:id>/delete", methods=["GET"])
 @login_required
 def remove_entry_get(id):
-	#TODO: lock down by user or admin
 	entry = session.query(Entry).get(id)
 	if entry.author_id != current_user.id:
 		flash("You can only delete your own posts", "danger")
@@ -133,7 +132,7 @@ def login_post():
 		flash("Incorrect username or password", "danger")
 		return redirect(url_for("login_get"))
 	
-	login_user(user) #TODO: Create cookie warning to comply with EU regs
+	login_user(user)
 	return redirect(request.args.get('next') or url_for("entries"))
 
 @app.route("/logout")
