@@ -15,7 +15,7 @@
 	{% endif %}
 
 {% for entry in entries %}
-{{ macros.render_entry(entry) }}
+{{ macros.render_entry(entry, current_user) }}
 {% endfor %}
 
 <ul class="pager">
