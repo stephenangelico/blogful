@@ -54,8 +54,10 @@ def add_entry_get():
 @app.route("/entry/add", methods=["POST"])
 @login_required
 def add_entry_post():
+	checktitle = request.form["title"]
+	checktitle = checktitle[:1023]
 	entry = Entry(
-		title=request.form["title"],
+		title=checktitle,
 		content=request.form["content"],
 		author=current_user,
 	)
