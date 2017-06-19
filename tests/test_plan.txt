@@ -13,5 +13,15 @@ Acceptance tests:
 Logout - test that a) the button says "Login" and b) User cannot add an entry
 
 Views - check number of entries (needs 50+ entries)
+      - Check that edit and delete links do not appear on non-authored post
 
-Test entire workflow
+
+Test entire workflow:
+Go to /, login.
+Click Add Entry
+Insert content, press Submit.
+Check new content is there
+Click Edit to fix typos
+Check edited content
+Click Delete on old entry and confirm
+Check entry is removed
