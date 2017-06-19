@@ -55,6 +55,9 @@ def add_entry_get():
 @login_required
 def add_entry_post():
 	checktitle = request.form["title"]
+	if len(checktitle) == 0:
+		flash("Entry title cannot be blank", "warning")
+		return redirect(url_for("add_entry_get"))
 	checktitle = checktitle[:1023]
 	entry = Entry(
 		title=checktitle,

@@ -70,6 +70,19 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(entry.title, "Test EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTest EntryTes")
 		self.assertEqual(entry.content, "Test content")
 		self.assertEqual(entry.author, self.user)
+	
+	def test_add_entry_blank(self):
+		self.simulate_login()
+		
+		response = self.client.post("/entry/add", data={
+		"title": "",
+		"content": "Test content"
+		})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(urlparse(response.location).path, "/entry/add")
+		entries = session.query(Entry).all()
+		self.assertEqual(len(entries), 0)
 	def test_edit_entry(self):
 		self.test_add_entry()
 		
