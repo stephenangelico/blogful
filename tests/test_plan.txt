@@ -3,10 +3,10 @@ Integration tests:
 #delete_entry - Check that entry is removed from DB
 Views - check number of entries rendered
 
-add_entry - What if content includes `</textarea>` (make sure content is escaped)
 #edit_entry - check that new content appears in DB
 #add_entry - What happens if entry title is more than 1024 chars
 #add_entry - What if the title or content is blank
+#add_entry - What if content includes `</textarea>` (make sure content is escaped)
 
 
 

@@ -83,6 +83,25 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(urlparse(response.location).path, "/entry/add")
 		entries = session.query(Entry).all()
 		self.assertEqual(len(entries), 0)
+	
+	def test_add_entry_malicious(self):
+		self.simulate_login()
+		
+		response = self.client.post("/entry/add", data={
+		"title": "Test Entry",
+		"content": "Test content </textarea><script>alert(\"Gotcha\")</script>"
+		})
+		
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(urlparse(response.location).path, "/")
+		entries = session.query(Entry).all()
+		self.assertEqual(len(entries), 1)
+		
+		entry = entries[0]
+		self.assertEqual(entry.title, "Test Entry")
+		self.assertEqual(entry.content, "Test content </textarea><script>alert(\"Gotcha\")</script>")
+		self.assertEqual(entry.author, self.user)
+	
 	def test_edit_entry(self):
 		self.test_add_entry()
 		
