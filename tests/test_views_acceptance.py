@@ -58,6 +58,38 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(self.browser.url, "http://127.0.0.1:8081/login")
 		self.assertEqual(self.browser.find_by_css(".alert-danger").first.text,
 					"Incorrect username or password")
+	
+	def test_add_entry(self):
+		self.test_login_correct()
+		self.browser.visit("http://127.0.0.1:8081/entry/add")
+		self.browser.fill("title", "Test Entry")
+		self.browser.fill("content", "Testibg new entry.")
+		button = self.browser.find_by_css("button[type=submit]")
+		button.click()
+		self.assertEqual(self.browser.url, "http://127.0.0.1:8081/")
+		self.assertEqual(self.browser.find_by_css("#title-1").first.text,
+					"Test Entry")
+	
+	def test_edit_entry(self):
+		self.test_add_entry()
+		self.browser.visit("http://127.0.0.1:8081/entry/1/edit")
+		self.assertEqual(self.browser.find_by_css("#title").first.value,
+					"Test Entry")
+		self.assertEqual(self.browser.find_by_css("#content").first.value,
+					"Testibg new entry.")
+		self.browser.fill("content", "Testing new entry.")
+		button = self.browser.find_by_css("button[type=submit]")
+		button.click()
+		self.assertEqual(self.browser.url, "http://127.0.0.1:8081/")
+		self.assertEqual(self.browser.find_by_css("#content-1").first.text,
+					"Testing new entry.")
+	
+	def test_delete_entry(self):
+		self.test_add_entry()
+		self.browser.visit("http://127.0.0.1:8081/entry/1/delete")
+		button = self.browser.find_by_css("button[type=submit]")
+		button.click()
+		self.assertEqual(len(self.browser.find_by_css("#title-1")), 0)
 
 if __name__ == "__main__":
 	unittest.main()

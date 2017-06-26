@@ -11,17 +11,19 @@ Integration tests:
 Acceptance tests:
 =================
 Logout - test that a) the button says "Login" and b) User cannot add an entry
+- Add id to login and logout buttons as hooks
+- Check @login_required redirects to /login
 
 Views - check number of entries (needs 50+ entries)
-      - Check that edit and delete links do not appear on non-authored post
+      - Check that edit and delete links do not appear on non-authored post (needs second user)
 
 
 Test entire workflow:
-Go to /, login.
-Click Add Entry
-Insert content, press Submit.
-Check new content is there
-Click Edit to fix typos
-Check edited content
-Click Delete on old entry and confirm
-Check entry is removed
+#Go to /, login.
+#Click Add Entry
+#Insert content, press Submit.
+#Check new content is there
+#Click Edit to fix typos
+#Check edited content
+#Click Delete on old entry and confirm
+#Check entry is removed
