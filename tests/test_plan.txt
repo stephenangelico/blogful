@@ -11,8 +11,8 @@ Integration tests:
 Acceptance tests:
 =================
 Logout - test that a) the button says "Login" and b) User cannot add an entry
-- Add id to login and logout buttons as hooks
-- Check @login_required redirects to /login
+# Add id to login and logout buttons as hooks
+# Check @login_required redirects to /login
 
 Views - check number of entries (needs 50+ entries)
       - Check that edit and delete links do not appear on non-authored post (needs second user)
