@@ -46,8 +46,7 @@ class TestViews(unittest.TestCase):
 		try:
 			self.browser.quit()
 		except OSError:
-			if sys.exc_info(value) == "[Errno 9] Bad file descriptor":
-				pass
+			pass
 	
 	def test_login_correct(self):
 		self.browser.visit("http://127.0.0.1:8081/login")
