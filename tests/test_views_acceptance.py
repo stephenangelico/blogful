@@ -1,4 +1,5 @@
 import os
+import sys
 import unittest
 import multiprocessing
 import time
@@ -41,7 +42,12 @@ class TestViews(unittest.TestCase):
 		session.close()
 		engine.dispose()
 		Base.metadata.drop_all(engine)
-		self.browser.quit()
+		# Hack to handle exception caused by Selenium bug
+		try:
+			self.browser.quit()
+		except OSError:
+			if sys.exc_info(value) == "[Errno 9] Bad file descriptor":
+				pass
 	
 	def test_login_correct(self):
 		self.browser.visit("http://127.0.0.1:8081/login")
