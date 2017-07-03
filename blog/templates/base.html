@@ -37,9 +37,9 @@
 					{% if current_user.is_authenticated %}
 					<li class="username">{{ current_user.name }}</li>
 					<li><a href="{{ url_for('add_entry_get') }}">Add Entry</a></li>
-					<li><a href="{{ url_for('logout') }}"><div id="logout">Logout</div></a></li>
+					<li><a href="{{ url_for('logout') }}"><div class="logout">Logout</div></a></li>
 					{% else %}
-					<li><a href="{{ url_for('login_get') }}"><div id="login">Login</div></a></li>
+					<li><a href="{{ url_for('login_get') }}"><div class="login">Login</div></a></li>
 					{% endif %}
 					</ul>
 				</div>
