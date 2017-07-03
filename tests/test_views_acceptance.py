@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash
 from splinter import Browser
 
 # Configure your app to use the testing database
-os.environ["CONFIG_PATH"] = "blog.config.TestingConfig"
+if os.environ.get("CONFIG_PATH") == None:
+	os.environ["CONFIG_PATH"] = "blog.config.TestingConfig"
 
 from blog import app
 from blog.database import Base, engine, session, User
