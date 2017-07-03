@@ -52,7 +52,6 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(self.browser.url, "http://127.0.0.1:8081/")
 		self.assertEqual(self.browser.find_by_css(".username").first.html, "Alice")
 	
-	@skip
 	def test_login_incorrect(self):
 		self.browser.visit("http://127.0.0.1:8081/login")
 		self.browser.fill("email", "bob@example.com")
@@ -79,7 +78,6 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(self.browser.url, "http://127.0.0.1:8081/entry/add")
 		self.assertEqual(self.browser.find_by_css(".logout").first.html, "Logout")
 	
-	@skip
 	def test_add_entry(self):
 		self.test_login_correct()
 		self.browser.visit("http://127.0.0.1:8081/entry/add")
@@ -92,7 +90,6 @@ class TestViews(unittest.TestCase):
 					"Test Entry")
 	
 	
-	@skip
 	def test_edit_entry(self):
 		self.test_add_entry()
 		self.browser.visit("http://127.0.0.1:8081/entry/1/edit")
@@ -107,7 +104,6 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(self.browser.find_by_css("#content-1").first.text,
 					"Testing new entry.")
 	
-	@skip
 	def test_delete_entry(self):
 		self.test_add_entry()
 		self.browser.visit("http://127.0.0.1:8081/entry/1/delete")
