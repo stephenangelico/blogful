@@ -94,7 +94,6 @@ class TestViews(unittest.TestCase):
 		self.assertEqual(self.browser.find_by_css("#title-1").first.text,
 					"Test Entry")
 	
-	
 	def test_edit_entry(self):
 		self.test_add_entry()
 		self.browser.visit("http://127.0.0.1:8081/entry/1/edit")
@@ -115,6 +114,26 @@ class TestViews(unittest.TestCase):
 		button = self.browser.find_by_css("button[type=submit]")
 		button.click()
 		self.assertEqual(len(self.browser.find_by_css("#title-1")), 0)
+	
+	def test_entries_count(self):
+		# Content seed lifted from manage.py
+		# Slow as sludge via HTTP but I really don't care
+		seed_content = """Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."""
+		self.test_login_correct()
+		for i in range(51):
+			self.browser.visit("http://127.0.0.1:8081/entry/add")
+			self.browser.fill("title", "Test Entry #{}".format(i))
+			self.browser.fill("content", seed_content)
+			button = self.browser.find_by_css("button[type=submit]")
+			button.click()			
+		self.browser.visit("http://127.0.0.1:8081/")
+		self.assertTrue(len(self.browser.find_by_css(".row"))<=10)
+		self.browser.visit("http://127.0.0.1:8081/?limit=20")
+		self.assertTrue(len(self.browser.find_by_css(".row"))<=20)
+		self.browser.visit("http://127.0.0.1:8081/?limit=50")
+		self.assertTrue(len(self.browser.find_by_css(".row"))<=50)
+		self.browser.visit("http://127.0.0.1:8081/?limit=3.14")
+		self.assertTrue(len(self.browser.find_by_css(".row"))<=10)
 
 if __name__ == "__main__":
 	unittest.main()
