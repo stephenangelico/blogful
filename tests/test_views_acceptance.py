@@ -24,10 +24,13 @@ class TestViews(unittest.TestCase):
 		# Set up the tables in the database
 		Base.metadata.create_all(engine)
 		
-		# Create an example user
+		# Create example users
 		self.user = User(name="Alice", email="alice@example.com",
 				password=generate_password_hash("test"))
 		session.add(self.user)
+		self.user2 = User(name="Bob", email="bob@example.com",
+				password=generate_password_hash("asdf"))
+		session.add(self.user2)
 		session.commit()
 		
 		self.process = multiprocessing.Process(target=app.run,
@@ -134,6 +137,24 @@ class TestViews(unittest.TestCase):
 		self.assertTrue(len(self.browser.find_by_css(".row"))<=50)
 		self.browser.visit("http://127.0.0.1:8081/?limit=3.14")
 		self.assertTrue(len(self.browser.find_by_css(".row"))<=10)
+	
+	def test_author_links(self):
+		self.test_add_entry()
+		self.assertTrue(self.browser.is_element_present_by_text("Edit"))
+		self.assertTrue(self.browser.is_element_present_by_text("Delete"))
+		# check not logged in
+		self.browser.visit("http://127.0.0.1:8081/logout")
+		self.assertTrue(self.browser.is_element_not_present_by_text("Edit"))
+		self.assertTrue(self.browser.is_element_not_present_by_text("Delete"))
+		# check other user logged in
+		self.browser.visit("http://127.0.0.1:8081/login")
+		self.browser.fill("email", "bob@example.com")
+		self.browser.fill("password", "asdf")
+		button = self.browser.find_by_css("button[type=submit]")
+		button.click()
+		self.assertTrue(self.browser.is_element_not_present_by_text("Edit"))
+		self.assertTrue(self.browser.is_element_not_present_by_text("Delete"))
+		
 
 if __name__ == "__main__":
 	unittest.main()
